@@ -21,9 +21,10 @@ pub fn packstep_s(data: &mut point::Particles<'_>,
 
     for i in 0..(n - ncut) {
         packstep_single(data,i);
-        data.uvec[i] = data.utmp[i];
-        data.pvec[i] = data.ptmp[i];
     }
+
+    data.pvec[..(n - ncut)].clone_from_slice(&data.ptmp[..(n - ncut)]);
+    data.uvec[..(n - ncut)].clone_from_slice(&data.utmp[..(n - ncut)]);
 }
 
 
