@@ -1,0 +1,33 @@
+#For even better perfomance
+# RUSTFLAGS="-C target-cpu=native"
+# https://vfoley.xyz/rust-compilation-tip/
+# https://www.reddit.com/r/rust/comments/6ynm53/a_simple_tip_to_improve_rust_program_speed/
+
+[package]
+name = "a"
+version = "0.1.0"
+
+[profile.dev]
+opt-level = 0
+debug = true
+debug-assertions = true
+overflow-checks = true
+lto = false
+panic = 'unwind'
+incremental = true
+codegen-units = 16  # Note: ignored because `incremental` is enabled.
+rpath = false
+
+[profile.release]
+opt-level = 3
+debug = false
+debug-assertions = false
+overflow-checks = false
+lto = false
+panic = 'unwind'
+incremental = false
+codegen-units = 16
+rpath = false           
+
+[dependencies]
+charts = "0.3.0"
