@@ -1,0 +1,2 @@
+cargo:rustc-env=TYPENUM_BUILD_CONSTS=/home/aras/rustlearn/target/release/build/typenum-015558415e0e8df4/out/consts.rs
+cargo:rustc-env=TYPENUM_BUILD_OP=/home/aras/rustlearn/target/release/build/typenum-015558415e0e8df4/out/op.rs

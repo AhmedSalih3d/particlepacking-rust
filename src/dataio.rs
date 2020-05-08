@@ -20,8 +20,10 @@ pub fn readpoints(filename: &str) -> Vec<point::Point> {
         })
         .collect();
 
-    let mut pvec = vec![point::Point::new(); arr.len()];
-    for i in 0..arr.len() {
+    let n = arr.len();
+
+    let mut pvec = vec![point::Point::new(); n];
+    for i in 0..n {
         pvec[i] = point::Point(arr[i][0], arr[i][1], arr[i][2]);
     }
     pvec

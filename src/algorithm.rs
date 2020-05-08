@@ -1,5 +1,11 @@
 use point;
 
+#[derive(Copy, Clone)]
+struct UpdatePoints{
+    utmp: point::Point,
+    ptmp: point::Point
+}
+
 struct AC;
 
 // A struct with two fields
@@ -13,34 +19,40 @@ impl AC{
     const ZETA:f32 = 0.067_966;
     const V:f32 = 0.000_865_93;
     const DT:f32 = 0.014_713;
+    const EPS:f32 = 0.000_001;
 }
 
 pub fn packstep_s(data: &mut point::Particles<'_>,
                   ncut: usize) {
     let n = data.pvec.len();
+    let pi_vec = data.pvec[0..(n-ncut)].to_vec();
 
-    for i in 0..(n - ncut) {
-        packstep_single(data,i);
+    let pim = &*data.pvec.clone();
+    let uim = &*data.uvec.clone();
+
+    for (i,_) in pi_vec.iter().enumerate() {
+        let up_points = packstep_single(&pim,&uim,i);
+        data.ptmp[i] = up_points.ptmp;
+        data.utmp[i] = up_points.utmp;
     }
+
 
     data.pvec[..(n - ncut)].clone_from_slice(&data.ptmp[..(n - ncut)]);
     data.uvec[..(n - ncut)].clone_from_slice(&data.utmp[..(n - ncut)]);
 }
 
-
-fn packstep_single(data: &mut point::Particles<'_>, iter: usize){
+fn packstep_single(pvec: &[point::Point], uvec: & &[point::Point], iter: usize) -> UpdatePoints{
     let mut wgx = 0.0;
     let mut wgy = 0.0;
     let mut wgz = 0.0;
-    let p_i = data.pvec[iter];
+    let p_i = pvec[iter];
 
-    for (j, p_j) in data.pvec.iter().enumerate() {
-        if j != iter {
+    for p_j in pvec.iter() {
             let rij = p_i - *p_j;
             let mut rij2 = (rij * rij).sum();
             if rij2 <= AC::H2 {
                 rij2 = rij2.sqrt();
-                let rij1 = 1.0 / (rij2);
+                let rij1 = 1.0 / (rij2+AC::EPS);
                 let q = rij2 * AC::H1;
                 let q1 = q - 2.0;
                 let qq3 = q * q1 * q1 * q1;
@@ -50,15 +62,20 @@ fn packstep_single(data: &mut point::Particles<'_>, iter: usize){
                 wgy += wq * (rij.1 * rij1) * AC::H1;
                 wgz += wq * (rij.2 * rij1) * AC::H1;
             }
-        }
     }
 
-    let u_i = data.uvec[iter];
+    let u_i = uvec[iter];
 
-    let dux = (-AC::BETA * wgx * AC::V - AC::ZETA * u_i.0) * AC::DT;
-    let duy = (-AC::BETA * wgy * AC::V - AC::ZETA * u_i.1) * AC::DT;
-    let duz = (-AC::BETA * wgz * AC::V - AC::ZETA * u_i.2) * AC::DT;
+    let bvt = -AC::BETA * AC::V * AC::DT;
+    let zt  = -AC::ZETA * AC::DT;
 
-    data.utmp[iter] = u_i + point::Point(dux, duy, duz);
-    data.ptmp[iter] = p_i + point::Point(dux * AC::DT, duy, duz * AC::DT);
+    let dux = wgx*bvt + u_i.0*zt;
+    let duy = wgy*bvt + u_i.1*zt;
+    let duz = wgz*bvt + u_i.2*zt;
+
+    let utmp_loop = u_i + point::Point(dux, duy, duz);
+    let ptmp_loop = p_i + point::Point(dux * AC::DT, duy *  AC::DT, duz * AC::DT);
+
+    UpdatePoints {utmp : utmp_loop,ptmp : ptmp_loop}
+    
 }

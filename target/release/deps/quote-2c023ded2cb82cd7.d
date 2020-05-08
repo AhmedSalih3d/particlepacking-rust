@@ -1,0 +1,13 @@
+/home/aras/rustlearn/target/release/deps/quote-2c023ded2cb82cd7.rmeta: /home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/lib.rs /home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/ext.rs /home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/format.rs /home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/ident_fragment.rs /home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/to_tokens.rs /home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/runtime.rs /home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/spanned.rs
+
+/home/aras/rustlearn/target/release/deps/libquote-2c023ded2cb82cd7.rlib: /home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/lib.rs /home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/ext.rs /home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/format.rs /home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/ident_fragment.rs /home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/to_tokens.rs /home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/runtime.rs /home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/spanned.rs
+
+/home/aras/rustlearn/target/release/deps/quote-2c023ded2cb82cd7.d: /home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/lib.rs /home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/ext.rs /home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/format.rs /home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/ident_fragment.rs /home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/to_tokens.rs /home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/runtime.rs /home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/spanned.rs
+
+/home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/lib.rs:
+/home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/ext.rs:
+/home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/format.rs:
+/home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/ident_fragment.rs:
+/home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/to_tokens.rs:
+/home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/runtime.rs:
+/home/aras/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.4/src/spanned.rs:
