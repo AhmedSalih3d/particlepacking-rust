@@ -1,4 +1,5 @@
 use point;
+use rayon::prelude::*;
 
 #[derive(Copy, Clone)]
 struct UpdatePoints{
@@ -22,33 +23,80 @@ impl AC{
     const EPS:f32 = 0.000_001;
 }
 
-pub fn packstep_s(data: &mut point::Particles<'_>,
+pub fn packstep_s(data: &mut point::Particles,
                   ncut: usize) {
     let n = data.pvec.len();
-    let pi_vec = data.pvec[0..(n-ncut)].to_vec();
 
-    let pim = &*data.pvec.clone();
-    let uim = &*data.uvec.clone();
-
-    for (i,_) in pi_vec.iter().enumerate() {
-        let up_points = packstep_single(&pim,&uim,i);
-        data.ptmp[i] = up_points.ptmp;
-        data.utmp[i] = up_points.utmp;
+    // Indices ordered by x position
+    let mut order: Vec<usize> = (0..n).collect();
+    order.sort_by(|&i, &j| data.pvec[i].0.partial_cmp(&data.pvec[j].0).unwrap());
+    // Reverse look-up of order
+    let mut index_pos = vec![0; n];
+    for i in 0..n {
+        index_pos[order[i]] = i;
     }
 
+    let mut pi_vec = data.pvec[0..(n-ncut)].to_vec();
+    let mut ui_vec = data.uvec[0..(n-ncut)].to_vec();
 
-    data.pvec[..(n - ncut)].clone_from_slice(&data.ptmp[..(n - ncut)]);
-    data.uvec[..(n - ncut)].clone_from_slice(&data.utmp[..(n - ncut)]);
+    pi_vec
+    .par_iter_mut()
+    .zip(&mut ui_vec)
+    .enumerate()
+    .for_each(|(i,(p_ptr,u_ptr))|
+        {
+            let up_points = packstep_single(&data.pvec,&data.uvec,i,&order,&index_pos);
+            *p_ptr = up_points.ptmp;
+            *u_ptr = up_points.utmp;
+        }
+    );
+
+    // Only alters relevant indices
+    data.pvec[..(n - ncut)].clone_from_slice(&pi_vec);
+    data.uvec[..(n - ncut)].clone_from_slice(&ui_vec);
 }
 
-fn packstep_single(pvec: &[point::Point], uvec: & &[point::Point], iter: usize) -> UpdatePoints{
+fn packstep_single(pvec: &[point::Point], uvec: &[point::Point], iter: usize,  order: &[usize], index_pos: &[usize]) -> UpdatePoints{
     let mut wgx = 0.0;
     let mut wgy = 0.0;
     let mut wgz = 0.0;
     let p_i = pvec[iter];
 
-    for p_j in pvec.iter() {
-            let rij = p_i - *p_j;
+    let mut close_points = Vec::new();
+
+    let mut check = |j| -> bool {
+        let p_j = &pvec[j];
+        let rij = p_i - *p_j;
+        let rij2 = (rij * rij).sum();
+        if rij2 <= AC::H2 {
+            close_points.push(j);
+        }
+        // If x distance is too large,
+        // no more points are needed to checked
+        rij.0 * rij.0 > AC::H2
+    };
+
+    let iter_pos = index_pos[iter];
+    assert!(order[iter_pos] == iter);
+
+
+    for &j in order[iter_pos+1..].iter() {
+        if check(j) {
+            break;
+        }
+    }
+
+    for &j in order[..iter_pos].iter().rev() {
+        if check(j) {
+            break;
+        }
+    }
+
+    // It is for if you want the exact floating point sum order (for validation)
+    // close_points.sort();
+
+    for j in close_points {
+            let rij = p_i - pvec[j];
             let mut rij2 = (rij * rij).sum();
             if rij2 <= AC::H2 {
                 rij2 = rij2.sqrt();

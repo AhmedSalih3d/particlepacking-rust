@@ -4,11 +4,9 @@ use std::ops;
 #[derive(Copy, Clone)]
 pub struct Point(pub f32, pub f32, pub f32);
 
-pub struct Particles<'a>{
-    pub pvec: &'a mut Vec<Point>,
-    pub uvec: &'a mut Vec<Point>,
-    pub ptmp: &'a mut Vec<Point>,
-    pub utmp: &'a mut Vec<Point>
+pub struct Particles{
+    pub pvec: Vec<Point>,
+    pub uvec: Vec<Point>,
 }
 
 // Implement method for print (println!)

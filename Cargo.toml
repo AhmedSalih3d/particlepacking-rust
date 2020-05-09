@@ -31,3 +31,4 @@ rpath = false
 
 [dependencies]
 charts = "0.3.0"
+rayon  = "1.3.0"

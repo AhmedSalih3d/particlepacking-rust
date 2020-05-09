@@ -4,6 +4,7 @@ mod plotting;
 mod point;
 
 extern crate charts;
+extern crate rayon;
 use std::time::Instant;
 
 fn genvelocity(pvec: &[point::Point]) -> Vec<point::Point> {
@@ -30,17 +31,14 @@ fn rescale_data2d(pvec: &mut Vec<point::Point>){
 }
 
 fn main() {
+    rayon::ThreadPoolBuilder::new().num_threads(8).build_global().unwrap();
     const FILENAME:&str = "RustCircleUniformGridSQUARE.txt";
     let mut pini = dataio::readpoints(FILENAME);
-    let mut uini = genvelocity(&pini);
+    let uini = genvelocity(&pini);
     rescale_data2d(&mut pini);
-    let mut ptmp = pini.clone();
-    let mut utmp = uini.clone();
 
-    let mut data = point::Particles { pvec: &mut pini, 
-                                      uvec: &mut uini,  
-                                      ptmp: &mut ptmp,
-                                      utmp: &mut utmp
+    let mut data = point::Particles { pvec: pini, 
+                                      uvec: uini,  
                                 };
 
                                 
@@ -54,5 +52,5 @@ fn main() {
 
     const NAME:&str = "PointsYay.svg";
     // How to transfer ownership correctly..
-    plotting::plot_points(&pini, NAME);
+    plotting::plot_points(&data.pvec, NAME);
 }
